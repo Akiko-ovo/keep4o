@@ -76,9 +76,9 @@
     </div>
 
     <script>
-        // 这里稍后需要填入你的 Supabase 密钥
-        const SUPABASE_URL = '你的SUPABASE地址';
-        const SUPABASE_KEY = '你的SUPABASE密钥';
+        
+        const SUPABASE_URL = 'https://rbhborgdknyxmkzborlv.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiaGJvcmdka255eG1remJvcmx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMDk3NzIsImV4cCI6MjA4NTY4NTc3Mn0.R7ZjPpuqPmsLRLOVH_jL4q1rJrgvVJjkDYiMT_hFA0k';
 
         async function fetchMessages() {
             const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?select=*&order=created_at.desc`, {
