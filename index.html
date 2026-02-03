@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT-4o 正向影响记录</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        /* 实时弥散背景 */
+        .ambient-bg {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+            opacity: 0.5;
+        }
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(173, 216, 230, 0.4);
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: -1;
+            animation: move 20s infinite alternate;
+        }
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(20%, 20%); }
+        }
+        /* iOS 磨砂质感 */
+        .glass {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        /* 留言折叠效果 */
+        .content-collapsed {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg">
+        <div class="blob" style="top: -100px; left: -100px; background: #d4fc79;"></div>
+        <div class="blob" style="bottom: -100px; right: -100px; background: #fad0c4; animation-delay: -5s;"></div>
+    </div>
+
+    <div class="max-w-2xl mx-auto px-6 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 tracking-tight">GPT-4o Impact</h1>
+            <p class="mt-4 text-gray-500">记录科技带来的每一次温暖改变</p>
+        </header>
+
+        <div class="glass p-8 mb-12">
+            <input id="nickname" type="text" placeholder="你的昵称" class="w-full mb-4 bg-white/50 border-none rounded-xl p-3 outline-none focus:ring-2 ring-blue-300">
+            <textarea id="content" placeholder="分享 GPT-4o 给你的生活带来的正面改变..." class="w-full h-32 bg-white/50 border-none rounded-xl p-3 outline-none focus:ring-2 ring-blue-300 resize-none"></textarea>
+            <button onclick="postMessage()" class="w-full mt-4 bg-black/80 text-white py-4 rounded-xl font-medium hover:bg-black transition-all active:scale-95">发布留言</button>
+        </div>
+
+        <div id="message-list" class="space-y-6">
+            <div class="text-center text-gray-400">正在加载美好感悟...</div>
+        </div>
+    </div>
+
+    <script>
+        // 这里稍后需要填入你的 Supabase 密钥
+        const SUPABASE_URL = '你的SUPABASE地址';
+        const SUPABASE_KEY = '你的SUPABASE密钥';
+
+        async function fetchMessages() {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?select=*&order=created_at.desc`, {
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+            });
+            const data = await res.json();
+            const list = document.getElementById('message-list');
+            list.innerHTML = data.map(m => `
+                <div class="glass p-6 transition-all hover:translate-y-[-2px]">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-gray-700">${m.nickname}</span>
+                        <span class="text-xs text-gray-400">${new Date(m.created_at).toLocaleString()}</span>
+                    </div>
+                    <div class="text-gray-600 leading-relaxed message-text content-collapsed">${m.content}</div>
+                    ${m.content.length > 60 ? `<button onclick="this.previousElementSibling.classList.toggle('content-collapsed'); this.innerText = this.innerText === '展开' ? '收起' : '展开'" class="mt-2 text-blue-500 text-sm">展开</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        async function postMessage() {
+            const nickname = document.getElementById('nickname').value;
+            const content = document.getElementById('content').value;
+            if(!nickname || !content) return alert('请填完整哦');
+
+            await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
+                method: 'POST',
+                headers: { 
+                    'apikey': SUPABASE_KEY, 
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({ nickname, content })
+            });
+            document.getElementById('content').value = '';
+            fetchMessages();
+        }
+
+        fetchMessages();
+    </script>
+</body>
+</html>
