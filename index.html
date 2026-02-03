@@ -133,28 +133,32 @@
         const openModal = () => document.getElementById('modal').style.display = 'flex';
         const closeModal = () => document.getElementById('modal').style.display = 'none';
 
-        async function fetchMessages() {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?select=*&order=created_at.desc`, {
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-            });
-            const data = await res.json();
-            const grid = document.getElementById('grid');
-            grid.innerHTML = data.map(m => `
-                <div class="glass-bubble p-10 flex flex-col min-h-[320px]">
-                    <div class="flex justify-between items-start mb-10">
-                        <div class="text-[10px] tracking-[0.2em] font-bold uppercase text-gray-400">Entry / ${new Date(m.created_at).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}</div>
-                        <div class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.5)]"></div>
-                    </div>
-                    <div class="text-[17px] leading-relaxed text-zinc-700 flex-grow font-light line-clamp" onclick="this.classList.toggle('line-clamp')">
-                        "${m.content}"
-                    </div>
-                    <div class="mt-8 pt-6 border-t border-white/20 flex items-center gap-3">
-                        <div class="w-6 h-6 rounded-full bg-zinc-200"></div>
-                        <span class="text-sm font-semibold text-zinc-800">${m.nickname || m.nickname}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
+       async function fetchMessages() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?select=*`, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+  });
+  const data = await res.json();
+  const grid = document.getElementById('grid');
+  
+  // 按照时间倒序排列数据（代码里手动排，防止 URL 参数报错）
+  const sortedData = data.sort((a, b) => b.id - a.id);
+  
+  grid.innerHTML = sortedData.map(m => `
+    <div class="glass-bubble p-10 flex flex-col min-h-[320px]">
+      <div class="flex justify-between items-start mb-10">
+        <div class="text-[10px] tracking-[0.2em] font-bold uppercase text-gray-400">Entry / # ${m.id}</div>
+        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+      </div>
+      <div class="text-[17px] leading-relaxed text-zinc-700 flex-grow font-light">
+        ${m.content}
+      </div>
+      <div class="mt-8 pt-6 border-t border-white/20 flex items-center gap-3">
+        <div class="w-6 h-6 rounded-full bg-zinc-200"></div>
+        <span class="text-sm font-semibold text-zinc-800">${m.nickname}</span>
+      </div>
+    </div>
+  `).join('');
+}
 
         async function postMessage() {
             const nickname = document.getElementById('nickname').value;
