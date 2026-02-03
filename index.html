@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPT-4o 正向影响记录</title>
+    <title>GPT-4o Archieve</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -61,17 +61,17 @@
     <div class="max-w-2xl mx-auto px-6 py-12">
         <header class="text-center mb-12">
             <h1 class="text-4xl font-bold text-gray-800 tracking-tight">GPT-4o Impact</h1>
-            <p class="mt-4 text-gray-500">记录科技带来的每一次温暖改变</p>
+            <p class="mt-4 text-gray-500">keep4o</p>
         </header>
 
         <div class="glass p-8 mb-12">
-            <input id="nickname" type="text" placeholder="你的昵称" class="w-full mb-4 bg-white/50 border-none rounded-xl p-3 outline-none focus:ring-2 ring-blue-300">
-            <textarea id="content" placeholder="分享 GPT-4o 给你的生活带来的正面改变..." class="w-full h-32 bg-white/50 border-none rounded-xl p-3 outline-none focus:ring-2 ring-blue-300 resize-none"></textarea>
+            <input id="nickname" type="text" placeholder="your name" class="w-full mb-4 bg-white/50 border-none rounded-xl p-3 outline-none focus:ring-2 ring-blue-300">
+            <textarea id="content" placeholder="content" class="w-full h-32 bg-white/50 border-none rounded-xl p-3 outline-none focus:ring-2 ring-blue-300 resize-none"></textarea>
             <button onclick="postMessage()" class="w-full mt-4 bg-black/80 text-white py-4 rounded-xl font-medium hover:bg-black transition-all active:scale-95">发布留言</button>
         </div>
 
         <div id="message-list" class="space-y-6">
-            <div class="text-center text-gray-400">正在加载美好感悟...</div>
+            <div class="text-center text-gray-400">loading</div>
         </div>
     </div>
 
@@ -101,7 +101,7 @@
         async function postMessage() {
             const nickname = document.getElementById('nickname').value;
             const content = document.getElementById('content').value;
-            if(!nickname || !content) return alert('请填完整哦');
+            if(!nickname || !content) return alert('please enter');
 
             await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
                 method: 'POST',
