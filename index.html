@@ -1,99 +1,157 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPT-4o Archieve</title>
+    <title>4o archive | Chronicling the Omni Impact</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            background: #f0f2f5;
-            min-height: 100vh;
-            overflow-x: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        :root {
+            --glass: rgba(255, 255, 255, 0.25);
+            --border: rgba(255, 255, 255, 0.4);
         }
-        /* 实时弥散背景 */
-        .ambient-bg {
+
+        body {
+            background-color: #fcfcfd;
+            margin: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            overflow-x: hidden;
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+        }
+
+        /* --- High-end Fluid Mesh Gradient --- */
+        .ambient-canvas {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             z-index: -1;
-            background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
-            opacity: 0.5;
+            overflow: hidden;
+            background: #fff;
         }
+
         .blob {
             position: absolute;
-            width: 500px;
-            height: 500px;
-            background: rgba(173, 216, 230, 0.4);
-            filter: blur(80px);
             border-radius: 50%;
-            z-index: -1;
-            animation: move 20s infinite alternate;
+            filter: blur(120px);
+            opacity: 0.4;
+            animation: flow 25s infinite alternate ease-in-out;
         }
-        @keyframes move {
-            from { transform: translate(-10%, -10%); }
-            to { transform: translate(20%, 20%); }
+
+        .b1 { width: 800px; height: 800px; background: #dbeafe; top: -200px; left: -100px; }
+        .b2 { width: 600px; height: 600px; background: #fae8ff; bottom: -100px; right: -100px; animation-delay: -7s; }
+        .b3 { width: 700px; height: 700px; background: #f1f5f9; top: 20%; right: -200px; animation-delay: -12s; }
+
+        @keyframes flow {
+            from { transform: translate(0, 0) rotate(0deg) scale(1); }
+            to { transform: translate(100px, 50px) rotate(15deg) scale(1.1); }
         }
-        /* iOS 磨砂质感 */
-        .glass {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+
+        /* --- iOS Glassmorphism --- */
+        .glass-bubble {
+            background: var(--glass);
+            backdrop-filter: blur(40px) saturate(150%);
+            -webkit-backdrop-filter: blur(40px) saturate(150%);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        /* 留言折叠效果 */
-        .content-collapsed {
+
+        .glass-bubble:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.05);
+        }
+
+        /* --- Typography & Layout --- */
+        .archive-title {
+            font-weight: 600;
+            font-size: 4rem;
+            background: linear-gradient(180deg, #1a1a1a 0%, #737373 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .line-clamp {
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+
+        .input-glass {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        #modal { display: none; }
     </style>
 </head>
 <body>
-    <div class="ambient-bg">
-        <div class="blob" style="top: -100px; left: -100px; background: #d4fc79;"></div>
-        <div class="blob" style="bottom: -100px; right: -100px; background: #fad0c4; animation-delay: -5s;"></div>
+
+    <div class="ambient-canvas">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
     </div>
 
-    <div class="max-w-2xl mx-auto px-6 py-12">
-        <header class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-800 tracking-tight">GPT-4o Impact</h1>
-            <p class="mt-4 text-gray-500">keep4o</p>
+    <div class="max-w-6xl mx-auto px-10 py-24">
+        <header class="mb-32">
+            <h1 class="archive-title">4o archive</h1>
+            <p class="text-gray-400 text-lg mt-4 max-w-md font-light">
+                Documenting the profound shift in human-AI interaction. A collective memory of the GPT-4o era.
+            </p>
         </header>
 
-        <div class="glass p-8 mb-12">
-            <input id="nickname" type="text" placeholder="your name" class="w-full mb-4 bg-white/50 border-none rounded-xl p-3 outline-none focus:ring-2 ring-blue-300">
-            <textarea id="content" placeholder="content" class="w-full h-32 bg-white/50 border-none rounded-xl p-3 outline-none focus:ring-2 ring-blue-300 resize-none"></textarea>
-            <button onclick="postMessage()" class="w-full mt-4 bg-black/80 text-white py-4 rounded-xl font-medium hover:bg-black transition-all active:scale-95">发布留言</button>
-        </div>
+        <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            </div>
+    </div>
 
-        <div id="message-list" class="space-y-6">
-            <div class="text-center text-gray-400">loading</div>
+    <button onclick="openModal()" class="fixed bottom-12 right-12 w-14 h-14 bg-black text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all z-50">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+    </button>
+
+    <div id="modal" class="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-white/40 backdrop-blur-md">
+        <div class="glass-bubble w-full max-w-lg p-10 relative">
+            <button onclick="closeModal()" class="absolute top-6 right-8 text-gray-400 hover:text-black transition-colors">Close</button>
+            <h2 class="text-2xl font-semibold mb-8">New Perspective</h2>
+            
+            <input id="nickname" type="text" placeholder="Identity / Nickname" class="w-full mb-6 input-glass rounded-2xl p-4 outline-none focus:ring-1 ring-black/10">
+            <textarea id="content" placeholder="Describe the impact..." class="w-full h-48 input-glass rounded-2xl p-4 outline-none focus:ring-1 ring-black/10 resize-none mb-8"></textarea>
+            
+            <button onclick="postMessage()" class="w-full bg-black text-white py-5 rounded-2xl font-medium hover:bg-zinc-800 transition-all shadow-xl">
+                Archive this moment
+            </button>
         </div>
     </div>
 
     <script>
-        
         const SUPABASE_URL = 'https://rbhborgdknyxmkzborlv.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiaGJvcmdka255eG1remJvcmx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxMDk3NzIsImV4cCI6MjA4NTY4NTc3Mn0.R7ZjPpuqPmsLRLOVH_jL4q1rJrgvVJjkDYiMT_hFA0k';
+
+        const openModal = () => document.getElementById('modal').style.display = 'flex';
+        const closeModal = () => document.getElementById('modal').style.display = 'none';
 
         async function fetchMessages() {
             const res = await fetch(`${SUPABASE_URL}/rest/v1/messages?select=*&order=created_at.desc`, {
                 headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
             });
             const data = await res.json();
-            const list = document.getElementById('message-list');
-            list.innerHTML = data.map(m => `
-                <div class="glass p-6 transition-all hover:translate-y-[-2px]">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="font-bold text-gray-700">${m.nickname}</span>
-                        <span class="text-xs text-gray-400">${new Date(m.created_at).toLocaleString()}</span>
+            const grid = document.getElementById('grid');
+            grid.innerHTML = data.map(m => `
+                <div class="glass-bubble p-10 flex flex-col min-h-[320px]">
+                    <div class="flex justify-between items-start mb-10">
+                        <div class="text-[10px] tracking-[0.2em] font-bold uppercase text-gray-400">Entry / ${new Date(m.created_at).toLocaleDateString('en-US', {month: 'short', day: 'numeric'})}</div>
+                        <div class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_10px_rgba(74,222,128,0.5)]"></div>
                     </div>
-                    <div class="text-gray-600 leading-relaxed message-text content-collapsed">${m.content}</div>
-                    ${m.content.length > 60 ? `<button onclick="this.previousElementSibling.classList.toggle('content-collapsed'); this.innerText = this.innerText === '展开' ? '收起' : '展开'" class="mt-2 text-blue-500 text-sm">展开</button>` : ''}
+                    <div class="text-[17px] leading-relaxed text-zinc-700 flex-grow font-light line-clamp" onclick="this.classList.toggle('line-clamp')">
+                        "${m.content}"
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-white/20 flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full bg-zinc-200"></div>
+                        <span class="text-sm font-semibold text-zinc-800">${m.name || m.nickname}</span>
+                    </div>
                 </div>
             `).join('');
         }
@@ -101,18 +159,16 @@
         async function postMessage() {
             const nickname = document.getElementById('nickname').value;
             const content = document.getElementById('content').value;
-            if(!nickname || !content) return alert('please enter');
+            if(!nickname || !content) return;
 
             await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
                 method: 'POST',
-                headers: { 
-                    'apikey': SUPABASE_KEY, 
-                    'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=minimal'
-                },
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nickname, content })
             });
+            
+            closeModal();
+            document.getElementById('nickname').value = '';
             document.getElementById('content').value = '';
             fetchMessages();
         }
